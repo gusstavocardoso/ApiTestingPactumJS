@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: windows-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x, 18.x] 
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v2
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }} 
+
+      - name: Instalar dependencias
+        run: npm install
+
+      - name: Setar variaveis de ambiente
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
+          USER: ${{ secrets.USER }}
+          PASS: ${{ secrets.PASS }}          
+        run: echo "BASE_URL=$BASE_URL\nUSER=$USER\nPASS=$PASS" >> .env  
+
+      - name: Executar testes
+        run: npm run test
+        
+      - name: Publicar relatório Mochawesome
+        uses: actions/upload-artifact@v2
+        with:
+          name: mochawesome-report
+          path: mochawesome-report        
