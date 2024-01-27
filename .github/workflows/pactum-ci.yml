@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x] 
+        node-version: [18.x]
 
     steps:
       - name: Checkout do código
@@ -20,7 +20,7 @@ jobs:
       - name: Configurar Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: ${{ matrix.node-version }} 
+          node-version: ${{ matrix.node-version }}
 
       - name: Instalar dependencias
         run: npm install
@@ -30,12 +30,12 @@ jobs:
           echo "BASE_URL=${{ secrets.BASE_URL }}" >> .env
           echo "USER=${{ secrets.USER }}" >> .env
           echo "PASS=${{ secrets.PASS }}" >> .env
-        
+
       - name: Executar testes
         run: npm run test
-        
+
       - name: Publicar relatório Mochawesome
         uses: actions/upload-artifact@v2
         with:
           name: mochawesome-report
-          path: mochawesome-report        
+          path: mochawesome-report
