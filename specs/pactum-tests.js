@@ -1,5 +1,6 @@
 const { spec, request } = require('pactum');
 const { books } = require('../data/books.json');
+const { generateToken } = require('../utils/utils');
 
 const dotenv = require('dotenv');
 dotenv.config();
@@ -18,17 +19,9 @@ request.setDefaultHeaders({
 
 describe('Testando API restful-booker com PactumJS', () => {
   before(async () => {
-    await spec()
-      .post('/auth')
-      .withJson({
-        username: username,
-        password: password,
-      })
-      .expectStatus(200)
-      .returns((response) => {
-        token = response.res.body.token;
-        console.log(token);
-      });
+    token = await generateToken(username, password);
+
+    console.log('Token recebido:', token);
   });
 
   it('Should register a book', async () => {
